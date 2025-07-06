@@ -1,0 +1,117 @@
+name: Translations from source repository
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: source repository url
+        type: string
+        default: x1xhlol/system-prompts-and-models-of-ai-tools
+
+env:
+  LAST_SHA_FILE: .commit
+  OUT_BRANCH: test2-zh
+
+  NEW_SHA: ""
+  LAST_SHA: ""
+
+  AM_FILE_LIST: ${{ github.workspace }}/am_files
+  D_FILE_LIST: ${{ github.workspace }}/d_files
+
+jobs:
+  translate_and_push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repo }}
+          path: source-repo
+
+      - name: Get source sha
+        working-directory: source-repo
+        run: echo "NEW_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
+
+      - name: Checkout target repository
+        uses: actions/checkout@v4
+        with:
+          path: target-repo
+          ref: ${{ env.OUT_BRANCH }}
+
+      - name: Get target lastest sha
+        working-directory: target-repo
+        run: |
+          echo "LAST_SHA=$(cat ${{ env.LAST_SHA_FILE }})" >> $GITHUB_ENV
+          test ! -f ${{ env.LAST_SHA_FILE }} && rm -rf ./*
+
+      - name: Check the commit
+        if: env.LAST_SHA == env.NEW_SHA
+        run: echo "Nothing new." && exit 0
+
+      - name: Get difference files
+        working-directory: source-repo
+        if: env.LAST_SHA
+        run: |
+          git diff --name-only --diff-filter=AM ${{ env.LAST_SHA }} HEAD > ${{ env.AM_FILE_LIST }}
+          git diff --name-only --diff-filter=D ${{ env.LAST_SHA }} HEAD > ${{ env.D_FILE_LIST }}
+
+      - name: if env.LAST_SHA is empty
+        working-directory: source-repo
+        if: env.LAST_SHA == '' || env.LAST_SHA == null
+        run: |
+          find . -type f -not -path "*/.*" > ${{ env.AM_FILE_LIST }}
+          echo "./*" > ${{ env.D_FILE_LIST }}
+
+      - name: Clean the file
+        if: env.D_FILE_LIST
+        working-directory: target-repo
+        run: xargs -d '\n' -a ${{ env.D_FILE_LIST }} rm -rf || echo "not matter"
+
+      - name: Check the file_lsit
+        run: |
+          cat ${{ env.AM_FILE_LIST }}
+          cat ${{ env.D_FILE_LIST }}
+
+      - name: Checkout the tools
+        uses: actions/checkout@v4
+        with:
+          repository: littrick/bash_tools
+          path: tools
+          token: ${{ secrets.TOOL_REPO_TOKEN }}
+
+      - name: Translate
+        run: |
+          cat > tr_args <<CAT_EOF
+          -w
+          source-repo
+          $(cat ${{ env.AM_FILE_LIST }})
+          -o
+          target-repo
+          en2zh
+          CAT_EOF
+          xargs -d '\n' -a tr_args tools/tr_zhen.sh -k ${{ secrets.API_KEY }}
+
+      - name: Recording last commit sha
+        working-directory: target-repo
+        run: echo ${{ env.NEW_SHA }} > ${{ env.LAST_SHA_FILE }}
+
+      - name: Handle the LICENSE and README
+        run: |
+          cp -f source-repo/LICENSE* target-repo/
+          ln -s README.zh.md target-repo/README.md
+
+      - name: Commit
+        working-directory: target-repo
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "Translated from commit ${{ env.SOURCE_SHA }} in the ${{ inputs.repo }} repository"
+
+      - name: Push it
+        uses: ad-m/github-push-action@master
+        with:
+          branch: ${{ env.OUT_BRANCH }}
+          directory: target-repo
+          force: true
