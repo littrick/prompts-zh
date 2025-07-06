@@ -1,0 +1,10 @@
+```json
+{
+  "function": "codebase_search",
+  "parameters": {
+    "query": "build an api for vllm",
+    "target_directories": ["."],
+    "explanation": "Buscar código relevante para construir una API para vLLM."
+  }
+}
+```
