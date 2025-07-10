@@ -10,7 +10,7 @@ on:
 
 env:
   LAST_SHA_FILE: .commit
-  OUT_BRANCH: zh
+  OUT_BRANCH: ${{ github.ref_name }}
 
   NEW_SHA: ""
   LAST_SHA: ""
@@ -28,6 +28,7 @@ jobs:
         with:
           repository: ${{ inputs.repo }}
           path: source-repo
+          fetch-depth: 0
 
       - name: Get source sha
         working-directory: source-repo
@@ -43,7 +44,7 @@ jobs:
         working-directory: target-repo
         run: |
           echo "LAST_SHA=$(cat ${{ env.LAST_SHA_FILE }})" >> $GITHUB_ENV
-          test ! -f ${{ env.LAST_SHA_FILE }} && rm -rf ./*
+          test ! -f ${{ env.LAST_SHA_FILE }} && rm -rf ./* || echo "ignore result"
 
       - name: Check the commit
         if: env.LAST_SHA == env.NEW_SHA
@@ -68,9 +69,11 @@ jobs:
         working-directory: target-repo
         run: xargs -d '\n' -a ${{ env.D_FILE_LIST }} rm -rf || echo "not matter"
 
-      - name: Check the file_lsit
+      - name: Check the file list
         run: |
+          echo "added and modified files"
           cat ${{ env.AM_FILE_LIST }}
+          echo "added and deleted"
           cat ${{ env.D_FILE_LIST }}
 
       - name: Checkout the tools
@@ -99,7 +102,7 @@ jobs:
       - name: Handle the LICENSE and README
         run: |
           cp -f source-repo/LICENSE* target-repo/
-          ln -s README.zh.md target-repo/README.md
+          ln -sf README.zh.md target-repo/README.md
 
       - name: Commit
         working-directory: target-repo
@@ -107,7 +110,7 @@ jobs:
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add .
-          git commit -m "Translated from commit ${{ env.SOURCE_SHA }} in the ${{ inputs.repo }} repository"
+          git commit -m "Translated from commit ${{ env.NEW_SHA }} in the ${{ inputs.repo }} repository"
 
       - name: Push it
         uses: ad-m/github-push-action@master
