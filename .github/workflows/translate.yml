@@ -69,9 +69,11 @@ jobs:
         working-directory: target-repo
         run: xargs -d '\n' -a ${{ env.D_FILE_LIST }} rm -rf || echo "not matter"
 
-      - name: Check the file_lsit
+      - name: Check the file list
         run: |
+          echo "added and modified files"
           cat ${{ env.AM_FILE_LIST }}
+          echo "added and deleted"
           cat ${{ env.D_FILE_LIST }}
 
       - name: Checkout the tools
@@ -100,7 +102,7 @@ jobs:
       - name: Handle the LICENSE and README
         run: |
           cp -f source-repo/LICENSE* target-repo/
-          ln -s README.zh.md target-repo/README.md
+          ln -sf README.zh.md target-repo/README.md
 
       - name: Commit
         working-directory: target-repo
