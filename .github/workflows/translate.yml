@@ -10,7 +10,7 @@ on:
 
 env:
   LAST_SHA_FILE: .commit
-  OUT_BRANCH: test2-zh
+  OUT_BRANCH: zh
 
   NEW_SHA: ""
   LAST_SHA: ""
