@@ -10,7 +10,7 @@ on:
 
 env:
   LAST_SHA_FILE: .commit
-  OUT_BRANCH: zh
+  OUT_BRANCH: ${{ github.ref_name }}
 
   NEW_SHA: ""
   LAST_SHA: ""
@@ -43,7 +43,7 @@ jobs:
         working-directory: target-repo
         run: |
           echo "LAST_SHA=$(cat ${{ env.LAST_SHA_FILE }})" >> $GITHUB_ENV
-          test ! -f ${{ env.LAST_SHA_FILE }} && rm -rf ./*
+          test ! -f ${{ env.LAST_SHA_FILE }} && rm -rf ./* || echo "ignore result"
 
       - name: Check the commit
         if: env.LAST_SHA == env.NEW_SHA
