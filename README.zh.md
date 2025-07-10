@@ -1,10 +1,10 @@
-# **完整版 v0、Cursor、Manus、Same.dev、Lovable、Devin、Replit Agent、Windsurf Agent、VSCode Agent、Dia Browser、Trae AI、Cluely & Spawn（及其他开源项目）系统提示词、工具与AI模型**  
+# **完整版 v0、Cursor、Manus、Same.dev、Lovable、Devin、Replit Agent、Windsurf Agent、VSCode Agent、Dia Browser、Trae AI、Cluely、Xcode & Spawn（及其他开源项目）系统提示词、工具与AI模型**  
 
 <a href="https://trendshift.io/repositories/14084" target="_blank"><img src="https://trendshift.io/api/badge/repositories/14084" alt="x1xhlol%2Fsystem-prompts-and-models-of-ai-tools | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 
 📜 超过 **7500+行** 的结构与功能解析。  
 
-[![Build Status](https://app.cloudback.it/badge/x1xhlol/system-prompts-and-models-of-ai-tools)](https://cloudback.it)
+[![构建状态](https://app.cloudback.it/badge/x1xhlol/system-prompts-and-models-of-ai-tools)](https://cloudback.it)
 
 ---
 
@@ -33,7 +33,8 @@
 - **Cursor 文件夹**  
 - **Dia 文件夹**  
 - **Trae AI 文件夹**  
-- **Cluely 文件夹**  
+- **Cluely 文件夹**
+- **Xcode 文件夹**  
 - **开源提示词文件夹**  
   - Codex CLI  
   - Cline  
@@ -44,7 +45,7 @@
 
 ## ❤️ 支持项目
 
-若您认为此合集有价值并认可整理与分享这些内容的努力，请考虑支持本项目。您的贡献将帮助保持资源更新并支持进一步探索。
+如果您认为本合集有价值，并认可获取和分享这些解析所付出的努力，请考虑支持本项目。您的贡献有助于保持资源更新并推动进一步探索。
 
 支持方式：
 
@@ -61,7 +62,7 @@
 ## 🛠 路线图与反馈
 
 > **注意：** 我们不再使用GitHub issues管理路线图和反馈。  
-> 请访问[系统提示词路线图与反馈](https://systemprompts.featurebase.app/)提交建议或查看计划功能。
+> 请访问 [系统提示词路线图与反馈](https://systemprompts.featurebase.app/) 提交建议或查看即将推出的功能。
 
 > **最近更新：** 2025年4月7日
 
@@ -78,8 +79,8 @@
 
 > ⚠️ **警告：** AI初创公司请确保数据安全。泄露的提示词或AI模型极易成为黑客目标。
 
-> 🔐 **重要：** 需要保护AI系统安全？  
-> 查看**[ZeroLeaks](https://zeroleaks.io/)**，该服务帮助初创公司**识别并加固**系统指令、内部工具和模型配置的泄露风险。**免费获取AI安全审计**，确保您的AI免受漏洞威胁。
+> 🔐 **重要提示：** 需要加强AI系统安全？  
+> 了解 **[ZeroLeaks](https://zeroleaks.io/)**，该服务专为初创公司设计，用于**识别和修复**系统指令、内部工具及模型配置的泄露风险。**免费获取AI安全审计**，全面防护AI系统漏洞。
 
 *注：该公司为本人所有，非第三方广告。*
 
