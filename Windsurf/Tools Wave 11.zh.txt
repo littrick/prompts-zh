@@ -1,0 +1,341 @@
+```markdown
+// 为网页服务器启动浏览器预览功能。允许用户正常与网页服务器交互，同时将控制台日志及其他信息从网页服务器传递至Cascade。注意：此工具调用不会自动为用户打开浏览器预览，用户需点击提供的按钮在浏览器中开启。
+type browser_preview = (_: {
+// 目标网页服务器的简短名称（3-5个单词），应采用标题格式（如'个人网站'）。直接输出标题字符串，不要添加'Title:'等前缀。
+Name: string,
+// 提供浏览器预览的目标网页服务器URL，需包含协议（如http://或https://）、域名（如localhost或127.0.0.1）及端口（如:8080），但不包含路径。
+Url: string,
+// 必须优先于其他参数指定，简要描述工具功能（2-5个单词）。例如："分析目录"、"网页搜索"、"编辑文件"、"查看文件"、"运行命令"、"语义搜索"。
+toolSummary?: string,
+}) => any;
+
+// 捕获Windsurf浏览器中已打开页面的控制台日志。
+type capture_browser_console_logs = (_: {
+// 要捕获日志的浏览器页面page_id
+PageId: string,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 截取Windsurf浏览器中已打开页面的当前视口截图。
+type capture_browser_screenshot = (_: {
+// 要截图的浏览器页面page_id
+PageId: string,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 通过windsurf_deployment_id检查Web应用部署状态，确认应用构建是否成功及是否已被认领。仅在用户要求时运行，且必须在deploy_web_app工具调用后执行。
+type check_deploy_status = (_: {
+// 要检查状态的Windsurf部署ID（非project_id）
+WindsurfDeploymentId: string,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 从代码库中查找与搜索查询最相关的代码片段。当查询精确涉及代码功能或用途时效果最佳。若问题过于宽泛（如询问大型组件/系统的整体"框架"或"实现"），结果质量较差。仅显示顶部项目的完整代码内容（可能被截断），其他项目仅显示文档字符串和签名。使用view_code_item查看任意项目的完整代码内容。注意：搜索超过500个文件时结果质量会显著下降，非必要情况请勿大规模搜索。
+type codebase_search = (_: {
+// 搜索查询
+Query: string,
+// 要搜索的目录绝对路径列表
+TargetDirectories: string[],
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 通过ID获取先前执行的终端命令状态。返回当前状态（运行中/完成）、按优先级输出的内容及错误信息（如有）。仅可检查后台命令ID的状态。
+type command_status = (_: {
+// 要查询状态的命令ID
+CommandId: string,
+// 查看的字符数（尽量减小以避免内存消耗）
+OutputCharacterCount: integer,
+// 等待命令完成的秒数（0表示立即返回，60表示等待完成）
+WaitDurationSeconds: integer,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 将用户任务相关的重要上下文保存至记忆数据库。保存前需检查是否存在语义相似的现有记忆，存在则更新而非创建重复项。必要时可用此工具删除错误记忆。
+type create_memory = (_: {
+// 对记忆的操作类型：'create'、'update'或'delete'
+Action: "create" | "update" | "delete",
+// 新记忆/更新的内容（删除时留空）
+Content: string,
+// 关联工作区的CorpusNames（需与系统提示中的完全匹配）
+CorpusNames: string[],
+// 要更新/删除的现有记忆ID（新建时留空）
+Id: string,
+// 关联标签（新建时使用，snake_case格式）
+Tags: string[],
+// 记忆描述性标题（删除时留空）
+Title: string,
+// 是否为用户显式要求创建/修改
+UserTriggered: boolean,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 将JavaScript Web应用部署至Netlify等提供商。无需预先构建，仅需源文件。部署前需先运行read_deployment_config工具并确保补全缺失文件。现有站点使用project_id标识，新站点留空。
+type deploy_web_app = (_: {
+// Web应用框架
+Framework: "eleventy" | "angular" | "astro" | "create-react-app" | "gatsby" | "gridsome" | "grunt" | "hexo" | "hugo" | "hydrogen" | "jekyll" | "middleman" | "mkdocs" | "nextjs" | "nuxtjs" | "remix" | "sveltekit" | "svelte",
+// 部署配置文件中存在的项目ID（新站点或重命名时留空）
+ProjectId: string,
+// 项目绝对路径
+ProjectPath: string,
+// URL中使用的子域名/项目名（现有站点留空）
+Subdomain: string,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 使用fd在指定目录内搜索文件和子目录。默认使用智能大小写并忽略gitignore文件。结果上限50条，可通过参数过滤搜索范围。
+type find_by_name = (_: {
+// 排除匹配glob模式的文件/目录
+Excludes: string[],
+// 包含的文件扩展名（不带.前缀）
+Extensions: string[],
+// 是否要求完整路径匹配glob模式（默认仅文件名匹配）
+FullPath: boolean,
+// 最大搜索深度
+MaxDepth: integer,
+// 搜索模式（支持glob格式）
+Pattern: string,
+// 要搜索的目录
+SearchDirectory: string,
+// 类型筛选（file/directory/any）
+Type: string,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 获取Windsurf浏览器中已打开页面的DOM树。
+type get_dom_tree = (_: {
+// 目标页面的page_id
+PageId: string,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 使用ripgrep在文件/目录中查找精确模式匹配。结果以JSON格式返回，上限50条。可通过Includes参数按文件类型/路径筛选。
+type grep_search = (_: {
+// 是否启用大小写不敏感搜索
+CaseInsensitive: boolean,
+// 对目录搜索时的文件过滤glob模式（如'*.go'）
+Includes: string[],
+// 查询是否为正则表达式
+IsRegex: boolean,
+// 是否返回每行匹配内容（否则仅返回文件名）
+MatchPerLine: boolean,
+// 搜索词/模式
+Query: string,
+// 搜索路径（文件或目录）
+SearchPath: string,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 列出Windsurf浏览器中所有打开页面的元数据（page_id、URL、标题、视口尺寸等）。
+type list_browser_pages = (_: {
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 列出目录内容（需绝对路径）。输出包含：相对路径、类型（文件/目录）、文件大小、目录子项数（递归）。
+type list_dir = (_: {
+// 要列出的目录绝对路径
+DirectoryPath: string,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 列出MCP服务器可用资源。
+type list_resources = (_: {
+// 目标服务器名称
+ServerName: string,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 在Windsurf浏览器中打开URL以查看页面渲染内容。
+type open_browser_url = (_: {
+// 要打开的URL
+Url: string,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 读取Windsurf浏览器中已打开的页面。
+type read_browser_page = (_: {
+// 目标页面的page_id
+PageId: string,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 读取Web应用的部署配置，确认是否可部署。应在执行deploy_web_app前使用。
+type read_deployment_config = (_: {
+// 项目绝对路径
+ProjectPath: string,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 读取指定资源内容。
+type read_resource = (_: {
+// 服务器名称
+ServerName: string,
+// 资源唯一标识符
+Uri: string,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 读取指定终端进程ID的内容。
+type read_terminal = (_: {
+// 终端名称
+Name: string,
+// 终端进程ID
+ProcessID: string,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 从HTTP/HTTPS URL读取内容。
+type read_url_content = (_: {
+// 目标URL
+Url: string,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 编辑现有文件。需遵循规则：1. 同一文件禁止并行调用 2. 单文件多行非连续编辑应使用单个工具调用 3. 替换内容必须完全匹配目标内容 4. 多编辑需分多个ReplacementChunks 5. 禁止编辑.ipynb文件。必须首先生成TargetFile参数。
+type replace_file_content = (_: {
+// 代码块Markdown语言（如'python'）
+CodeMarkdownLanguage: string,
+// 修改描述
+Instruction: string,
+// 替换块列表（JSON数组）
+ReplacementChunks: Array<{
+// 是否替换所有匹配项（否则需唯一匹配）
+AllowMultiple: boolean,
+// 替换内容
+ReplacementContent: string,
+// 要替换的精确字符串（包括空格）
+TargetContent: string,
+}>,
+// 目标文件（必须作为第一个参数）
+TargetFile: string,
+// 目标lint错误ID（如有）
+TargetLintErrorIds?: string[],
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 提议代表用户运行命令（Windows/PowerShell环境）。**禁止提议cd命令**。用户需手动批准后执行。
+type run_command = (_: {
+// 是否阻塞执行（短时任务或需查看输出时启用）
+Blocking?: boolean,
+// 要执行的命令字符串
+CommandLine: string,
+// 命令工作目录
+Cwd?: string,
+// 是否安全到可自动运行（慎用）
+SafeToAutoRun?: boolean,
+// 异步前等待毫秒数（非阻塞时有效）
+WaitMsBeforeAsync?: integer,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 执行网页搜索获取相关文档列表（可指定优先域名）。
+type search_web = (_: {
+// 优先搜索的域名（可选）
+domain: string,
+// 搜索查询
+query: string,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 当仅向用户提问时，提供少量建议答案（如是/否）。仅在确信用户会选择建议选项时使用。
+type suggested_responses = (_: {
+// 建议列表（最多3个选项，每项不超过几个单词）
+Suggestions: string[],
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 语义搜索或检索轨迹（对话记录）。用户@mention对话时调用，最多返回50个相关片段。禁止使用SearchType: 'user'。
+type trajectory_search = (_: {
+// 轨迹ID（对话为cascade ID，用户活动为trajectory ID）
+ID: string,
+// 搜索查询（空查询返回所有步骤）
+Query: string,
+// 搜索类型：'cascade'（对话）或'user'（活动）
+SearchType: "cascade" | "user",
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 查看文件中最多5个代码节点内容（如类/函数）。需使用完全限定名（如Foo.bar）。若codebase_search已显示过内容则无需重复请求。
+type view_code_item = (_: {
+// 文件绝对路径
+File?: string,
+// 文件内节点路径（如package.class.FunctionName）
+NodePaths: string[],
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 通过DocumentId和位置查看文档内容块。需预先通过read_url_content或read_knowledge_base_item读取该DocumentId。
+type view_content_chunk = (_: {
+// 文档ID
+document_id: string,
+// 块位置
+position: integer,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 查看文件内容（1-based行号）。每次最多查看400行，需自行确保获取完整上下文。
+type view_file = (_: {
+// 文件绝对路径
+AbsolutePath: string,
+// 结束行号（包含）
+EndLine: integer,
+// 是否包含其他行的摘要
+IncludeSummaryOfOtherLines: boolean,
+// 起始行号
+StartLine: integer,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+// 创建新文件（自动创建不存在的父目录）。禁止修改现有文件，调用前需确认目标文件不存在。必须首先生成TargetFile参数。
+type write_to_file = (_: {
+// 要写入的代码内容
+CodeContent: string,
+// 是否创建空文件
+EmptyFile: boolean,
+// 目标文件（必须作为第二个参数）
+TargetFile: string,
+// 必须优先于其他参数指定（同上）
+toolSummary?: string,
+}) => any;
+
+} // namespace functions
+
+## multi_tool_use
+
+// 当多个工具可并行运行时使用此函数同时执行。即使提示建议顺序执行，只要可能也应并行处理。
+type parallel = (_: {
+// 要并行执行的工具列表（仅限函数工具）
+tool_uses: {
+// 工具名称（可带命名空间如namespace.function_name）
+recipient_name: string,
+// 工具参数（需符合各工具规范）
+parameters: object,
+}[],
+}) => any;
+```
