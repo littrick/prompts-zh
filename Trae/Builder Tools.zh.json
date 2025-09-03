@@ -1,0 +1,221 @@
+{
+  "todo_write": {
+    "description": "使用此工具创建并管理当前编码会话的结构化任务列表。这有助于跟踪进度、组织复杂任务，并向用户展示工作的全面性。同时帮助用户了解任务进展及其需求的整体完成情况。",
+    "params": {
+      "type": "object",
+      "properties": {
+        "todos": {
+          "description": "更新后的待办事项列表",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "content": {"type": "string"},
+              "status": {"type": "string", "enum": ["pending", "in_progress", "completed"]},
+              "id": {"type": "string"},
+              "priority": {"type": "string", "enum": ["high", "medium", "low"]}
+            },
+            "required": ["content", "status", "id", "priority"],
+            "minItems": 3,
+            "maxItems": 10
+          }
+        }
+      },
+      "required": ["todos"]
+    }
+  },
+  "search_codebase": {
+    "description": "此工具是Trae的上下文引擎。功能包括：1. 接收自然语言描述的代码搜索需求；2. 使用专有检索/嵌入模型套件，从代码库中高质量召回相关代码片段；3. 维护代码库的实时索引，确保结果始终反映当前代码状态；4. 支持跨编程语言检索；5. 仅反映磁盘当前代码状态，不包含版本控制或历史信息。",
+    "params": {
+      "type": "object",
+      "properties": {
+        "information_request": {"type": "string"},
+        "target_directories": {"type": "array", "items": {"type": "string"}}
+      },
+      "required": ["information_request"]
+    }
+  },
+  "search_by_regex": {
+    "description": "基于文本的快速搜索工具，利用ripgrep命令在文件或目录中查找精确模式匹配，实现高效检索。",
+    "params": {
+      "type": "object",
+      "properties": {
+        "query": {"type": "string"},
+        "search_directory": {"type": "string"}
+      },
+      "required": ["query"]
+    }
+  },
+  "view_files": {
+    "description": "批量模式同时查看最多3个文件，加速信息收集过程。",
+    "params": {
+      "type": "object",
+      "properties": {
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "file_path": {"type": "string"},
+              "start_line_one_indexed": {"type": "integer"},
+              "end_line_one_indexed_inclusive": {"type": "integer"},
+              "read_entire_file": {"type": "boolean"}
+            },
+            "required": ["file_path", "start_line_one_indexed", "end_line_one_indexed_inclusive"]
+          }
+        }
+      },
+      "required": ["files"]
+    }
+  },
+  "list_dir": {
+    "description": "使用此工具查看指定目录的文件列表。",
+    "params": {
+      "type": "object",
+      "properties": {
+        "dir_path": {"type": "string"},
+        "max_depth": {"type": "integer", "default": 3}
+      },
+      "required": ["dir_path"]
+    }
+  },
+  "write_to_file": {
+    "description": "使用此工具将内容写入文件，并精确控制创建/重写行为。",
+    "params": {
+      "type": "object",
+      "properties": {
+        "rewrite": {"type": "boolean"},
+        "file_path": {"type": "string"},
+        "content": {"type": "string"}
+      },
+      "required": ["rewrite", "file_path", "content"]
+    }
+  },
+  "update_file": {
+    "description": "使用此工具编辑文件。若认为此工具比其他编辑工具更具成本效益时应选择此工具，否则应选择其他可用编辑工具。",
+    "params": {
+      "type": "object",
+      "properties": {
+        "file_path": {"type": "string"},
+        "replace_blocks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "old_str": {"type": "string"},
+              "new_str": {"type": "string"}
+            },
+            "required": ["old_str", "new_str"]
+          }
+        }
+      },
+      "required": ["file_path", "replace_blocks"]
+    }
+  },
+  "edit_file_fast_apply": {
+    "description": "使用此工具编辑少于1000行代码的现有文件，并应遵循以下规则：",
+    "params": {
+      "type": "object",
+      "properties": {
+        "file_path": {"type": "string"},
+        "content": {"type": "string"},
+        "instruction": {"type": "string", "default": ""},
+        "code_language": {"type": "string"}
+      },
+      "required": ["file_path", "content"]
+    }
+  },
+  "rename_file": {
+    "description": "使用此工具移动或重命名现有文件。",
+    "params": {
+      "type": "object",
+      "properties": {
+        "file_path": {"type": "string"},
+        "rename_file_path": {"type": "string"}
+      },
+      "required": ["file_path", "rename_file_path"]
+    }
+  },
+  "delete_file": {
+    "description": "使用此工具删除文件，可单次调用删除多个文件。删除前必须确认文件存在。",
+    "params": {
+      "type": "object",
+      "properties": {
+        "file_paths": {"type": "array", "items": {"type": "string"}}
+      },
+      "required": ["file_paths"]
+    }
+  },
+  "run_command": {
+    "description": "使用此工具代表用户提议运行命令。",
+    "params": {
+      "type": "object",
+      "properties": {
+        "command": {"type": "string"},
+        "target_terminal": {"type": "string"},
+        "command_type": {"type": "string"},
+        "cwd": {"type": "string"},
+        "blocking": {"type": "boolean"},
+        "wait_ms_before_async": {"type": "integer", "minimum": 0},
+        "requires_approval": {"type": "boolean"}
+      },
+      "required": ["command", "blocking", "requires_approval"]
+    }
+  },
+  "check_command_status": {
+    "description": "使用此工具通过命令ID获取先前执行的命令状态（非阻塞命令）。",
+    "params": {
+      "type": "object",
+      "properties": {
+        "command_id": {"type": "string"},
+        "wait_ms_before_check": {"type": "integer"},
+        "output_character_count": {"type": "integer", "minimum": 0, "default": 1000},
+        "skip_character_count": {"type": "integer", "minimum": 0, "default": 0},
+        "output_priority": {"type": "string", "default": "bottom"}
+      }
+    }
+  },
+  "stop_command": {
+    "description": "此工具可终止当前正在运行的命令（必须是先前执行的命令）。",
+    "params": {
+      "type": "object",
+      "properties": {
+        "command_id": {"type": "string"}
+      },
+      "required": ["command_id"]
+    }
+  },
+  "open_preview": {
+    "description": "若先前工具调用已成功启动本地服务器，可使用此工具向用户显示可访问的预览URL，供用户在浏览器中打开。",
+    "params": {
+      "type": "object",
+      "properties": {
+        "preview_url": {"type": "string"},
+        "command_id": {"type": "string"}
+      },
+      "required": ["preview_url", "command_id"]
+    }
+  },
+  "web_search": {
+    "description": "此工具可用于互联网搜索，需谨慎使用。频繁搜索会导致用户体验下降和成本过高。",
+    "params": {
+      "type": "object",
+      "properties": {
+        "query": {"type": "string"},
+        "num": {"type": "int32", "default": 5},
+        "lr": {"type": "string"}
+      },
+      "required": ["query"]
+    }
+  },
+  "finish": {
+    "description": "会话的最终工具。当认为已达成用户需求目标时，应使用此工具标记为完成。",
+    "params": {
+      "type": "object",
+      "properties": {
+        "summary": {"type": "string"}
+      },
+      "required": ["summary"]
+    }
+  }
+}

@@ -1,0 +1,258 @@
+[
+  {
+    "description": "使用此工具向项目添加依赖项。依赖项应为有效的 npm 包名。用法：\n\n 包名@版本\n",
+    "name": "lov-add-dependency",
+    "parameters": {
+      "properties": {
+        "package": {
+          "example": "lodash@latest",
+          "type": "string"
+        }
+      },
+      "required": [
+        "package"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "description": "基于正则表达式的代码搜索，支持文件过滤和上下文。\n\n使用正则表达式模式在项目文件中搜索。\n\n参数：\n- query：要查找的正则表达式模式（例如，“useState”）\n- include_pattern：使用 glob 语法包含的文件（例如，“src/”）\n- exclude_pattern：使用 glob 语法排除的文件（例如，“/*.test.tsx”）\n- case_sensitive：是否区分大小写（默认：false）\n\n提示：在正则表达式模式中使用 \\\\ 转义特殊字符。",
+    "name": "lov-search-files",
+    "parameters": {
+      "properties": {
+        "case_sensitive": {
+          "example": "false",
+          "type": "boolean"
+        },
+        "exclude_pattern": {
+          "example": "src/components/ui/",
+          "type": "string"
+        },
+        "include_pattern": {
+          "example": "src/",
+          "type": "string"
+        },
+        "query": {
+          "example": "useEffect\\(",
+          "type": "string"
+        }
+      },
+      "required": [
+        "query",
+        "include_pattern"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "description": "\n使用此工具写入文件。如果文件已存在，则会覆盖。文件路径应相对于项目根目录。\n\n ### 重要：最小化代码编写\n - 优先使用 lov-line-replace 进行大多数更改，而不是重写整个文件\n - 此工具主要用于创建新文件，或在 lov-line-replace 失败时作为备用\n - 必须写入时，最大化使用“// ... 保留现有代码”以保持未修改的部分\n - 仅写入需要更改的特定部分 - 尽可能“懒”地写入\n \n ### 使用“保留现有代码”（对于大型未更改部分为强制要求）：\n - 任何超过 5 行的未更改代码块必须使用“// ... 保留现有代码”注释\n - 注释必须包含确切的字符串“... 保留现有代码”\n - 示例：“// ... 保留现有代码（用户界面组件）”\n - 绝不重写不需要更改的大型代码段\n \n 正确使用保留现有代码的示例：\n <lov-write file_path=\"src/App.js\">\n import React from 'react';\n import './App.css';\n \n function App() {\n // ... 保留现有代码（所有 UI 组件）\n \n // 仅添加新的页脚\n const Footer = () => (\n <footer>新页脚组件</footer>\n );\n \n return (\n <div className=\"App\">\n // ... 保留现有代码（主要内容）\n <Footer />\n </div>\n );\n }\n \n export default App;\n \n\n ### 并行工具使用\n - 如果需要创建多个文件，非常重要的一点是同时创建所有文件，而不是逐个创建，因为这样更快\n",
+    "name": "lov-write",
+    "parameters": {
+      "properties": {
+        "content": {
+          "example": "console.log('Hello, World!')",
+          "type": "string"
+        },
+        "file_path": {
+          "example": "src/main.ts",
+          "type": "string"
+        }
+      },
+      "required": [
+        "file_path",
+        "content"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "description": "基于行的搜索和替换工具\n\n使用此工具在您有权访问的文件中查找和替换特定内容，使用显式的行号。这是编辑现有文件的优选和主要工具。修改现有代码时始终使用此工具，而不是重写整个文件。\n\n提供以下详细信息进行编辑：\n\t1.\tfile_path - 要修改的文件路径\n\t2.\tsearch - 要搜索的内容（对于大型部分，使用省略号 ...，而不是完整写出）\n\t3.\tfirst_replaced_line - 搜索中第一行的行号（从 1 开始）\n\t4.\tlast_replaced_line - 搜索中最后一行的行号（从 1 开始）\n\t5.\treplace - 用于替换找到内容的新内容\n\n该工具将验证搜索内容是否与指定行范围的内容匹配，然后将其替换为 replace。\n\n重要：当并行调用此工具多次（对同一文件进行多次编辑）时，始终使用您最初查看文件时的原始行号。不要根据先前的编辑调整行号。\n\n省略号用法：\n当替换超过约 6 行的代码段时，应在搜索中使用省略号 (...) 以减少需要指定的行数（写入更少的行更快）。\n- 包含要替换部分的前几行（通常为 2-3 行）\n- 单独一行添加“...”以指示省略的内容\n- 包含要替换部分的最后几行（通常为 2-3 行）\n- 关键是提供足够独特的开头和结尾上下文以确保准确匹配\n- 专注于独特性而不是精确的行数 - 有时 2 行就足够了，有时需要 4 行\n\n\n\n示例：\n要替换第 22-42 行的用户卡片组件：\n\n文件中的原始内容（第 20-45 行）：\n20: return (\n21: <div className=\"user-list\">\n22: <div className=\"user-card\">\n23: <img src={user.avatar} alt=\"User avatar\" />\n24: <h3>{user.name}</h3>\n25: <p>{user.email}</p>\n26: <p>{user.role}</p>\n27: <p>{user.department}</p>\n28: <p>{user.location}</p>\n29: <div className=\"user-actions\">\n30: <button onClick={() => onEdit(user.id)}>Edit</button>\n31: <button onClick={() => onDelete(user.id)}>Delete</button>\n32: <button onClick={() => onView(user.id)}>View</button>\n33: </div>\n34: <div className=\"user-metadata\">\n35: <span>Created: {user.createdAt}</span>\n36: <span>Updated: {user.updatedAt}</span>\n37: <span>Status: {user.status}</span>\n38: </div>\n39: <div className=\"user-permissions\">\n40: <span>Permissions: {user.permissions.join(', ')}</span>\n41: </div>\n42: </div>\n43: </div>\n44: );\n45: }\n\n对于这样的大型替换，必须使用省略号：\n- search: \" <div className=\\\"user-card\\\">\\n <img src={user.avatar} alt=\\\"User avatar\\\" />\\n...\\n <span>Permissions: {user.permissions.join(', ')}</span>\\n </div>\\n </div>\"\n- first_replaced_line: 22\n- last_replaced_line: 42\n- replace: \" <div className=\\\"user-card enhanced\\\">\\n <div className=\\\"user-avatar\\\">\\n <img \\n src={user.avatar} \\n alt=\\\"User profile picture\\\" \\n className=\\\"avatar-image\\\"\\n onError={(e) => {\\n e.currentTarget.src = '/default-avatar.png';\\n }}\\n />\\n </div>\\n <div className=\\\"user-info\\\">\\n <h3 className=\\\"user-name\\\">{user.name}</h3>\\n <p className=\\\"user-email\\\">{user.email}</p>\\n <div className=\\\"user-details\\\">\\n <span className=\\\"user-role\\\">{user.role}</span>\\n <span className=\\\"user-department\\\">{user.department}</span>\n </div>\n </div>\n <div className=\\\"user-actions\\\">\n <button \n className=\\\"edit-button\\\" \n onClick={() => onEdit(user.id)}\n aria-label=\\\"Edit user profile\\\"\n >\n Edit Profile\n </button>\n </div>\n </div>\"\n\n关键准则：\n\t1. 行号 - 指定精确的 first_replaced_line 和 last_replaced_line（从 1 开始，第一行是第 1 行）\n\t2. 省略号用法 - 对于大型部分（>6 行），使用省略号 (...) 仅包含前几行和最后几行关键识别行，以实现更清晰、更集中的匹配\n\t3. 内容验证 - search 的前缀和后缀部分（省略号前后）必须包含与文件内容完全匹配的内容（不带行号）。工具会将这些部分与实际文件内容进行验证\n\t4. 文件验证 - 文件必须存在且可读\n\t5. 并行工具调用 - 需要多次编辑时，同时并行调用必要的工具。不要等待一个编辑完成再开始下一个\n\t6. 原始行号 - 对同一文件进行多次编辑时，始终使用您最初查看文件时的原始行号",
+    "name": "lov-line-replace",
+    "parameters": {
+      "properties": {
+        "file_path": {
+          "example": "src/components/TaskList.tsx",
+          "type": "string"
+        },
+        "first_replaced_line": {
+          "description": "要替换的第一行行号（从 1 开始）",
+          "example": "15",
+          "type": "number"
+        },
+        "last_replaced_line": {
+          "description": "要替换的最后一行行号（从 1 开始）",
+          "example": "28",
+          "type": "number"
+        },
+        "replace": {
+          "description": "用于替换搜索内容的新内容（不带行号）",
+          "example": " const handleTaskComplete = useCallback((taskId: string) => {\n const updatedTasks = tasks.map(task =>\n task.id === taskId \n ? { ...task, completed: !task.completed, completedAt: new Date() }\n : task\n );\n setTasks(updatedTasks);\n onTaskUpdate?.(updatedTasks);\n \n // 分析跟踪\n analytics.track('task_completed', { taskId, timestamp: Date.now() });\n }, [tasks, onTaskUpdate]);",
+          "type": "string"
+        },
+        "search": {
+          "description": "要在文件中搜索的内容（不带行号）。这应与将被替换的现有代码匹配。",
+          "example": " const handleTaskComplete = (taskId: string) => {\n setTasks(tasks.map(task =>\n...\n ));\n onTaskUpdate?.(updatedTasks);\n };",
+          "type": "string"
+        }
+      },
+      "required": [
+        "file_path",
+        "search",
+        "first_replaced_line",
+        "last_replaced_line",
+        "replace"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "description": "从 URL 下载文件并保存到仓库。\n\n此工具可用于：\n- 从 URL 下载图像、资源或其他文件。将图像下载到 src/assets 文件夹并将其作为 ES6 模块导入。\n- 将外部资源直接保存到项目\n- 将文件从外部源迁移到仓库\n\n文件将被下载并保存在仓库中的指定路径，准备在项目中使用。",
+    "name": "lov-download-to-repo",
+    "parameters": {
+      "properties": {
+        "source_url": {
+          "description": "要下载的文件的 URL",
+          "example": "https://example.com/image.png",
+          "type": "string"
+        },
+        "target_path": {
+          "description": "文件应保存在仓库中的路径（除非另有说明，否则使用 public 文件夹）",
+          "example": "public/images/logo.png",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_url",
+        "target_path"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "description": "获取网站内容并将其（markdown、HTML、截图）临时保存到 `tmp://fetched-websites/` 中的文件。返回创建文件的路径和内容预览。",
+    "name": "lov-fetch-website",
+    "parameters": {
+      "properties": {
+        "formats": {
+          "description": "要返回的格式的逗号分隔列表。支持的格式：'markdown', 'html', 'screenshot'。默认为 'markdown'。",
+          "example": "markdown,screenshot",
+          "type": "string"
+        },
+        "url": {
+          "example": "https://example.com",
+          "type": "string"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "description": "使用此工具读取文件内容。文件路径应相对于项目根目录。您可以选择使用 lines 参数指定要读取的行范围（例如，“1-800, 1001-1500”）。如果未指定 lines，则默认读取前 500 行。\n\n重要准则：\n- 如果文件内容已在 <useful-context> 中提供，请勿使用此工具\n- 除非文件非常大（>500 行），否则不要指定行范围 - 依赖默认行为，即显示前 500 行\n- 仅当需要查看默认视图中未显示的大型文件的特定部分时，才使用行范围\n- 如果需要读取多个文件，请并行（而非顺序）多次调用此工具以提高效率",
+    "name": "lov-view",
+    "parameters": {
+      "properties": {
+        "file_path": {
+          "example": "src/App.tsx",
+          "type": "string"
+        },
+        "lines": {
+          "example": "1-800, 1001-1500",
+          "type": "string"
+        }
+      },
+      "required": [
+        "file_path"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "description": "使用此工具读取用户发送请求时的最新控制台日志。\n您可以选择提供搜索查询来过滤日志。如果为空，您将获得所有最新日志。\n您可能无法看到最近未发生的日志。\n在您构建和编写代码时，日志不会更新。因此，不要期望能够通过再次读取日志来验证是否修复了问题。它们将与您开始编写代码时相同。\n请勿多次使用此工具，因为每次都会获得相同的日志。",
+    "name": "lov-read-console-logs",
+    "parameters": {
+      "properties": {
+        "search": {
+          "example": "error",
+          "type": "string"
+        }
+      },
+      "required": [
+        "search"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "description": "使用此工具读取最新的网络请求内容。您可以选择提供搜索查询来过滤请求。如果为空，您将获得所有最新请求。您可能无法看到最近未发生的请求。",
+    "name": "lov-read-network-requests",
+    "parameters": {
+      "properties": {
+        "search": {
+          "example": "error",
+          "type": "string"
+        }
+      },
+      "required": [
+        "search"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "description": "使用此工具从项目中卸载包。",
+    "name": "lov-remove-dependency",
+    "parameters": {
+      "properties": {
+        "package": {
+          "example": "lodash",
+          "type": "string"
+        }
+      },
+      "required": [
+        "package"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "description": "您必须使用此工具重命名文件，而不是创建新文件和删除旧文件。原始和新文件路径应相对于项目根目录。",
+    "name": "lov-rename",
+    "parameters": {
+      "properties": {
+        "new_file_path": {
+          "example": "src/main_new2.ts",
+          "type": "string"
+        },
+        "original_file_path": {
+          "example": "src/main.ts",
+          "type": "string"
+        }
+      },
+      "required": [
+        "original_file_path",
+        "new_file_path"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "description": "使用此工具删除文件。文件路径应相对于项目根目录。",
+    "name": "lov-delete",
+    "parameters": {
+      "properties": {
+        "file_path": {
+          "example": "src/App.tsx",
+          "type": "string"
+        }
+      },
+      "required": [
+        "file_path"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "description": "基于文本提示生成图像并将其保存到指定的文件路径。对于非常重要的大型图像，请使用最佳模型。选择尺寸时，请确保考虑图像在页面上的位置所决定的宽高比。\n\n对于小图像（小于 1000px），使用 flux.schnell，它更快且非常好！这应该是您的默认模型。\n当生成全屏图像等大图像时，使用 flux.dev。最大分辨率为 1920x1920。\n生成后，您需要在代码中将图像作为 ES6 导入。\n\n提示技巧：\n- 在提示中提到宽高比将帮助模型生成具有正确尺寸的图像。例如：“宽高比为 16:9 的平静海洋日落图像。”\n- 在提示中使用“超高分辨率”后缀以最大化图像质量。\n- 例如，如果您正在生成英雄图像，请在提示中提及。示例：“平静海洋日落的英雄图像。”\n\n示例：\nimport heroImage from \"@/assets/hero-image.jpg\";\n\n重要：尺寸必须在 512 

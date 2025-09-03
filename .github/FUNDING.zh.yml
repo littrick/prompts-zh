@@ -1,3 +1,4 @@
-# 以下是支持的资金筹集平台  
-patreon: lucknite  
-github: x1xhlol
+# 这些是支持的资助模式平台
+patreon: lucknite
+ko_fi: lucknite
+custom: ["https://www.paypal.me/lucknitepb"]

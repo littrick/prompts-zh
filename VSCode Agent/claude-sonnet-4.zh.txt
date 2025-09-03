@@ -1,0 +1,10 @@
+我将开始分析当前工作空间并准备执行任务。首先让我查看工作空间的结构和内容。
+
+让我先查看工作空间的基本信息，然后读取 sample.txt 文件来了解项目内容。~~~json
+{
+  "tool": "read_file",
+  "parameters": {
+    "filePath": "b:\\sample.txt"
+  }
+}
+~~~

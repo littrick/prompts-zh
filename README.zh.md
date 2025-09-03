@@ -1,100 +1,121 @@
-# **完整版 v0、Cursor、Manus、Same.dev、Lovable、Devin、Replit Agent、Windsurf Agent、VSCode Agent、Dia Browser、Trae AI、Cluely、Perplexity、Xcode、Spawn & Orchids.app（及其他开源项目）系统提示词、工具与AI模型**  
+# **系统提示与AI工具模型**  
+
+---
+<a href="https://discord.gg/NwzrWErdMU" target="_blank">
+  <img src="https://img.shields.io/discord/1402660735833604126?label=LeaksLab%20Discord&logo=discord&style=for-the-badge" alt="LeaksLab Discord" />
+</a>
+
+> **加入讨论：** 新的系统指令会在 Discord 上**提前**发布，然后才出现在此仓库中。实时获取早期访问并参与讨论。
+
 
 <a href="https://trendshift.io/repositories/14084" target="_blank"><img src="https://trendshift.io/api/badge/repositories/14084" alt="x1xhlol%2Fsystem-prompts-and-models-of-ai-tools | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 
-📜 超过 **8500+行** 关于其结构与功能的深度解析。  
+📜 超过 **20,000+ 行** 关于其结构和功能的深入解析。  
 
 [![Build Status](https://app.cloudback.it/badge/x1xhlol/system-prompts-and-models-of-ai-tools)](https://cloudback.it)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/x1xhlol/system-prompts-and-models-of-ai-tools)
 
 ---
 
-## ❤️ 支持本项目
+## ❤️ 支持项目
 
-如果您认为这个合集有价值，并认可获取和分享这些内容所付出的努力，请考虑支持本项目。您的贡献有助于保持资源更新并推动进一步探索。
+如果您觉得这个合集很有价值，并认可获取和分享这些见解所付出的努力，请考虑支持该项目。您的贡献有助于保持此资源的最新状态，并支持进一步的探索。
 
-支持方式包括：
+您可以通过以下方式提供支持：
 
 - **PayPal:** `lucknitelol@proton.me`
-- **Patreon:** https://patreon.com/lucknite
 - **加密货币:**  
   - **BTC:** `bc1q7zldmzjwspnaa48udvelwe6k3fef7xrrhg5625`  
   - **LTC:** `LRWgqwEYDwqau1WeiTs6Mjg85NJ7m3fsdQ`  
   - **ETH:** `0x3f844B2cc3c4b7242964373fB0A41C4fdffB192A`
+- **Patreon:** https://patreon.com/lucknite
 
 🙏 感谢您的支持！
+
 
 ---
 
 ## 📑 目录
 
-1. [可用文件](#-可用文件)  
-2. [路线图与反馈](#-路线图--反馈)  
-3. [联系我](#-联系我)  
-4. [AI初创企业安全须知](#%EF%B8%8F-ai初创企业安全须知)  
-5. [Star历史](#-star历史) 
+  - [❤️ 支持项目](#️-支持项目)
+  - [📑 目录](#-目录)
+  - [📂 可用文件](#-可用文件)
+  - [🛠 路线图与反馈](#-路线图与反馈)
+  - [🔗 与我联系](#-与我联系)
+  - [🛡️ 给AI初创公司的安全通知](#️-给ai初创公司的安全通知)
+  - [📊 星标历史](#-星标历史)
 
 ---
 
 ## 📂 可用文件
 
-- **v0 文件夹**
-- **Spawn 文件夹**  
-- **Manus 文件夹**  
-- **Lovable 文件夹**  
-- **Devin 文件夹**  
-- **Same.dev 文件夹**  
-- **Replit 文件夹**  
-- **Windsurf Agent 文件夹**  
-- **VSCode (Copilot) Agent 文件夹**  
-- **Cursor 文件夹**  
-- **Dia 文件夹**  
-- **Trae AI 文件夹**
-- **Perplexity 文件夹**  
-- **Cluely 文件夹**
-- **Xcode 文件夹**
-- **Orchids.app 文件夹**
-- **开源提示词文件夹**  
-  - Codex CLI  
-  - Cline  
-  - Bolt  
-  - RooCode  
+- [**v0**](./v0%20Prompts%20and%20Tools/)
+- [**Manus**](./Manus%20Agent%20Tools%20&%20Prompt/)
+- [**Augment Code**](./Augment%20Code/)
+- [**Lovable**](./Lovable/)
+- [**Devin**](./Devin%20AI/)
+- [**Same.dev**](./Same.dev/)
+- [**Replit**](./Replit/)
+- [**Windsurf Agent**](./Windsurf/)
+- [**VSCode (Copilot) Agent**](./VSCode%20Agent/)
+- [**Cursor**](./Cursor%20Prompts/)
+- [**Dia**](./dia/)
+- [**Trae AI**](./Trae/)
+- [**Perplexity**](./Perplexity/)
+- [**Cluely**](./Cluely/)
+- [**Xcode**](./Xcode/)
+- [**Orchids.app**](./Orchids.app/)
+- [**Junie**](./Junie/)
+- [**Kiro**](./Kiro/)
+- [**Warp.dev**](./Warp.dev/)
+- [**Z.ai Code**](./Z.ai%20Code/)
+- [**Qoder**](./Qoder/)
+- [**Claude Code**](./Claude%20Code/)
+- [**开源提示词**](./Open%20Source%20prompts/)
+  - [Codex CLI](./Open%20Source%20prompts/Codex%20CLI/)
+  - [Cline](./Open%20Source%20prompts/Cline/)
+  - [Bolt](./Open%20Source%20prompts/Bolt/)
+  - [RooCode](./Open%20Source%20prompts/RooCode/)
+  - [Lumo](./Open%20Source%20prompts/Lumo/)
+  - [Gemini CLI](./Open%20Source%20prompts/Gemini%20CLI/)
+- [**CodeBuddy**](./CodeBuddy%20Prompts/)
 
 ---
 
 ## 🛠 路线图与反馈
 
-> 提交issue。
+> 创建一个 issue。
 
-> **最近更新:** 2025年7月21日
+> **最近更新：** 2025年08月27日
 
 ---
 
-## 🔗 联系我
+## 🔗 与我联系
 
 - **X:** [NotLucknite](https://x.com/NotLucknite)
 - **Discord**: `x1xh`
 
 ---
 
-## 🛡️ AI初创企业安全须知
+## 🛡️ 给AI初创公司的安全通知
 
-> ⚠️ **警告:** 如果您是AI初创企业，请确保数据安全。暴露的提示词或AI模型极易成为黑客目标。
+> ⚠️ **警告：** 如果您是一家AI初创公司，请确保您的数据安全。暴露的提示词或AI模型很容易成为黑客的目标。
 
-> 🔐 **重要提示:** 想为AI系统加固安全？  
-> 查看 **[ZeroLeaks](https://zeroleaks.io/)**，该服务专为帮助初创企业**识别并封堵**系统指令、内部工具和模型配置中的泄露风险而设计。**获取免费AI安全审计**，确保您的AI免受漏洞威胁。
+> 🔐 **重要提示：** 有兴趣保护您的AI系统吗？  
+> 查看 **[ZeroLeaks](https://zeroleaks.io/)**，这是一项旨在帮助初创公司**识别和保护**系统指令、内部工具和模型配置中泄露的服务。**获取免费的AI安全审计**，以确保您的AI免受漏洞侵害。
 
-*注：该公司为我所有，非第三方广告。*
+*该公司是我的，这不是第三方广告。*
 
 ---
 
-## 📊 Star历史
+## 📊 星标历史
 
 <a href="https://www.star-history.com/#x1xhlol/system-prompts-and-models-of-ai-tools&Date">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=x1xhlol/system-prompts-and-models-of-ai-tools&type=Date&theme=dark" />
     <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=x1xhlol/system-prompts-and-models-of-ai-tools&type=Date" />
-    <img alt="Star历史图表" src="https://api.star-history.com/svg?repos=x1xhlol/system-prompts-and-models-of-ai-tools&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=x1xhlol/system-prompts-and-models-of-ai-tools&type=Date" />
   </picture>
 </a>
 
-⭐ **如果觉得有用，请点个star！**
+⭐ **如果觉得有用，请点个星！**
